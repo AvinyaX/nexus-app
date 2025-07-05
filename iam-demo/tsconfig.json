@@ -1,0 +1,7 @@
+// DO NOT run 'tsc' in this folder directly.
+// Use 'npm run dev' or 'pnpm dev' for development (Vite handles JSX/TS).
+// For type checking, use: npx tsc --project tsconfig.app.json --noEmit
+// This file is only a placeholder to prevent accidental tsc usage.
+{
+  "extends": "./tsconfig.app.json"
+}
