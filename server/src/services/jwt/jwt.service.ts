@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import * as jwt from 'jsonwebtoken';
-import { jwtConfig } from './jwt.config';
+import { Injectable } from "@nestjs/common";
+import * as jwt from "jsonwebtoken";
+import { jwtConfig } from "./jwt.config";
 import {
   JwtSignOptions,
   JwtVerifyOptions,
   JwtDecodeOptions,
   JwtPayload,
   JwtDecoded,
-} from './jwt.types';
+} from "./jwt.types";
 
 @Injectable()
 export class JwtService {
@@ -42,17 +42,17 @@ export class JwtService {
   getExpiration(token: string): Date | null {
     const decoded = this.decode(token);
     let exp: number | undefined;
-    if (decoded && typeof decoded === 'object') {
-      if ('exp' in decoded && typeof decoded.exp === 'number') {
+    if (decoded && typeof decoded === "object") {
+      if ("exp" in decoded && typeof decoded.exp === "number") {
         exp = decoded.exp;
       } else if (
-        'payload' in decoded &&
-        typeof decoded.payload === 'object' &&
+        "payload" in decoded &&
+        typeof decoded.payload === "object" &&
         decoded.payload !== null &&
-        'exp' in decoded.payload
+        "exp" in decoded.payload
       ) {
         const expVal = (decoded.payload as Record<string, unknown>).exp;
-        if (typeof expVal === 'number') {
+        if (typeof expVal === "number") {
           exp = expVal;
         }
       }
@@ -64,17 +64,17 @@ export class JwtService {
   getIssuedAt(token: string): Date | null {
     const decoded = this.decode(token);
     let iat: number | undefined;
-    if (decoded && typeof decoded === 'object') {
-      if ('iat' in decoded && typeof decoded.iat === 'number') {
+    if (decoded && typeof decoded === "object") {
+      if ("iat" in decoded && typeof decoded.iat === "number") {
         iat = decoded.iat;
       } else if (
-        'payload' in decoded &&
-        typeof decoded.payload === 'object' &&
+        "payload" in decoded &&
+        typeof decoded.payload === "object" &&
         decoded.payload !== null &&
-        'iat' in decoded.payload
+        "iat" in decoded.payload
       ) {
         const iatVal = (decoded.payload as Record<string, unknown>).iat;
-        if (typeof iatVal === 'number') {
+        if (typeof iatVal === "number") {
           iat = iatVal;
         }
       }

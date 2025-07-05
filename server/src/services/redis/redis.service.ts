@@ -1,6 +1,6 @@
-import { Injectable, OnModuleDestroy, Logger, Inject } from '@nestjs/common';
-import Redis, { Redis as RedisClient, RedisOptions } from 'ioredis';
-import { RedisSearchOptions } from './redis.types';
+import { Injectable, OnModuleDestroy, Logger, Inject } from "@nestjs/common";
+import Redis, { Redis as RedisClient, RedisOptions } from "ioredis";
+import { RedisSearchOptions } from "./redis.types";
 
 @Injectable()
 export class RedisService implements OnModuleDestroy {
@@ -9,34 +9,34 @@ export class RedisService implements OnModuleDestroy {
   private readonly pub: RedisClient;
   private readonly sub: RedisClient;
 
-  constructor(@Inject('REDIS_CONFIG') private readonly config: RedisOptions) {
+  constructor(@Inject("REDIS_CONFIG") private readonly config: RedisOptions) {
     this.redis = new Redis(this.config);
     this.pub = new Redis(this.config);
     this.sub = new Redis(this.config);
 
-    this.redis.on('connect', () => this.logger.log('Redis connected'));
-    this.redis.on('error', (err) =>
+    this.redis.on("connect", () => this.logger.log("Redis connected"));
+    this.redis.on("error", (err) =>
       this.logger.error(
-        'Redis error',
+        "Redis error",
         err instanceof Error ? err.stack : String(err),
       ),
     );
-    this.pub.on('error', (err) =>
+    this.pub.on("error", (err) =>
       this.logger.error(
-        'Redis pub error',
+        "Redis pub error",
         err instanceof Error ? err.stack : String(err),
       ),
     );
-    this.sub.on('error', (err) =>
+    this.sub.on("error", (err) =>
       this.logger.error(
-        'Redis sub error',
+        "Redis sub error",
         err instanceof Error ? err.stack : String(err),
       ),
     );
   }
 
   // CRUD
-  async set(key: string, value: string): Promise<'OK'> {
+  async set(key: string, value: string): Promise<"OK"> {
     try {
       return await this.redis.set(key, value);
     } catch (err) {
@@ -85,13 +85,13 @@ export class RedisService implements OnModuleDestroy {
   }
 
   // Bulk
-  async mset(data: Record<string, string>): Promise<'OK'> {
+  async mset(data: Record<string, string>): Promise<"OK"> {
     try {
       const arr = Object.entries(data).flat();
       return await this.redis.mset(...arr);
     } catch (err) {
       this.logger.error(
-        'Error in mset',
+        "Error in mset",
         err instanceof Error ? err.stack : String(err),
       );
       throw err;
@@ -103,7 +103,7 @@ export class RedisService implements OnModuleDestroy {
       return await this.redis.mget(...keys);
     } catch (err) {
       this.logger.error(
-        'Error in mget',
+        "Error in mget",
         err instanceof Error ? err.stack : String(err),
       );
       throw err;
@@ -115,7 +115,7 @@ export class RedisService implements OnModuleDestroy {
       return await this.redis.del(...keys);
     } catch (err) {
       this.logger.error(
-        'Error in mdel',
+        "Error in mdel",
         err instanceof Error ? err.stack : String(err),
       );
       throw err;
@@ -124,26 +124,26 @@ export class RedisService implements OnModuleDestroy {
 
   // Search (by pattern)
   async search(options: RedisSearchOptions = {}): Promise<string[]> {
-    const pattern = options.pattern || '*';
+    const pattern = options.pattern || "*";
     const count = options.count || 100;
-    let cursor = '0';
+    let cursor = "0";
     let keys: string[] = [];
     try {
       do {
         const [next, found] = await this.redis.scan(
           cursor,
-          'MATCH',
+          "MATCH",
           pattern,
-          'COUNT',
+          "COUNT",
           count,
         );
         cursor = next;
         keys = keys.concat(found);
-      } while (cursor !== '0');
+      } while (cursor !== "0");
       return keys;
     } catch (err) {
       this.logger.error(
-        'Error in search',
+        "Error in search",
         err instanceof Error ? err.stack : String(err),
       );
       throw err;
@@ -176,7 +176,7 @@ export class RedisService implements OnModuleDestroy {
         );
       }
     });
-    this.sub.on('message', (chan, msg) => {
+    this.sub.on("message", (chan, msg) => {
       if (chan === channel) listener(msg);
     });
   }
@@ -198,6 +198,6 @@ export class RedisService implements OnModuleDestroy {
     await this.redis.quit();
     await this.pub.quit();
     await this.sub.quit();
-    this.logger.log('Redis connections closed');
+    this.logger.log("Redis connections closed");
   }
 }

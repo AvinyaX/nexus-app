@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { Health, CreateHealthDto, UpdateHealthDto } from './health.types';
-import { randomUUID } from 'crypto';
+import { Injectable } from "@nestjs/common";
+import { Health, CreateHealthDto, UpdateHealthDto } from "./health.types";
+import { randomUUID } from "crypto";
 
 @Injectable()
 export class HealthService {

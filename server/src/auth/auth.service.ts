@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { JwtService, JwtSignOptions as NestJwtSignOptions } from '@nestjs/jwt';
+import { Injectable } from "@nestjs/common";
+import { JwtService, JwtSignOptions as NestJwtSignOptions } from "@nestjs/jwt";
 import {
   JwtSignOptions,
   JwtVerifyOptions,
   JwtDecodeOptions,
-} from '@services/jwt';
+} from "@services/jwt";
 
 export interface UserLoginDto {
   username: string;
@@ -34,7 +34,7 @@ export class AuthService {
     payload: string | object | Buffer,
     options?: NestJwtSignOptions,
   ): string {
-    if (typeof payload === 'string') {
+    if (typeof payload === "string") {
       return this.jwtService.sign(payload, options);
     }
     return this.jwtService.sign(payload, options);

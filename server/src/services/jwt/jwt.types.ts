@@ -3,7 +3,7 @@ import type {
   VerifyOptions,
   DecodeOptions,
   JwtPayload as JwtPayloadJWT,
-} from 'jsonwebtoken';
+} from "jsonwebtoken";
 
 export type JwtSignOptions = SignOptions;
 export type JwtVerifyOptions = VerifyOptions;

@@ -9,11 +9,11 @@ import {
   HttpCode,
   HttpStatus,
   NotFoundException,
-} from '@nestjs/common';
-import { HealthService } from './health.service';
-import { Health, CreateHealthDto, UpdateHealthDto } from './health.types';
+} from "@nestjs/common";
+import { HealthService } from "./health.service";
+import { Health, CreateHealthDto, UpdateHealthDto } from "./health.types";
 
-@Controller('health')
+@Controller("health")
 export class HealthController {
   constructor(private readonly healthService: HealthService) {}
 
@@ -22,10 +22,10 @@ export class HealthController {
     return this.healthService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string): Health {
+  @Get(":id")
+  findOne(@Param("id") id: string): Health {
     const health = this.healthService.findOne(id);
-    if (!health) throw new NotFoundException('Health not found');
+    if (!health) throw new NotFoundException("Health not found");
     return health;
   }
 
@@ -35,17 +35,17 @@ export class HealthController {
     return this.healthService.create(dto);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateHealthDto): Health {
+  @Put(":id")
+  update(@Param("id") id: string, @Body() dto: UpdateHealthDto): Health {
     const health = this.healthService.update(id, dto);
-    if (!health) throw new NotFoundException('Health not found');
+    if (!health) throw new NotFoundException("Health not found");
     return health;
   }
 
-  @Delete(':id')
+  @Delete(":id")
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id') id: string): void {
+  delete(@Param("id") id: string): void {
     const deleted = this.healthService.delete(id);
-    if (!deleted) throw new NotFoundException('Health not found');
+    if (!deleted) throw new NotFoundException("Health not found");
   }
 }

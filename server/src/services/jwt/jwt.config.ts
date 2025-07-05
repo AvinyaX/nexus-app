@@ -1,4 +1,4 @@
-import type { Algorithm } from 'jsonwebtoken';
+import type { Algorithm } from "jsonwebtoken";
 
 export interface JwtConfig {
   secret: string;
@@ -7,12 +7,12 @@ export interface JwtConfig {
 }
 
 export const jwtConfig: JwtConfig = {
-  secret: process.env.JWT_SECRET || 'default_secret',
+  secret: process.env.JWT_SECRET || "default_secret",
   signOptions: {
     expiresIn: 3600, // 1 hour in seconds
-    algorithm: 'HS256',
+    algorithm: "HS256",
   },
   verifyOptions: {
-    algorithms: ['HS256'],
+    algorithms: ["HS256"],
   },
 };
