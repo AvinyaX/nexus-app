@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@prisma/*": ["../generated/prisma/*", "prisma/*"],
+      "@api/*": ["api/*"],
+      "@services/*": ["services/*"],
+      "@config/*": ["config/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+}
