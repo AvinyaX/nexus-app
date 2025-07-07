@@ -227,48 +227,57 @@ export default function UsersPage() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {users.map((user) => (
-              <tr key={user.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div>
-                    <div className="text-sm font-medium text-gray-900">
-                      {user.name || "No name"}
+            {Array.isArray(users) && users.length > 0 ? (
+              users.map((user) => (
+                <tr key={user.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {user.name || "No name"}
+                      </div>
+                      <div className="text-sm text-gray-500">{user.email}</div>
                     </div>
-                    <div className="text-sm text-gray-500">{user.email}</div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    {user.role?.name || "No role"}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex flex-wrap gap-1">
-                    {user.userPermissions.map((userPermission) => (
-                      <span
-                        key={userPermission.id}
-                        className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"
-                      >
-                        {userPermission.permission.name}
-                      </span>
-                    ))}
-                    {user.userPermissions.length === 0 && (
-                      <span className="text-sm text-gray-500">
-                        No direct permissions
-                      </span>
-                    )}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button
-                    onClick={() => openPermissionModal(user)}
-                    className="text-indigo-600 hover:text-indigo-900 font-medium"
-                  >
-                    Manage Permissions
-                  </button>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      {user.role?.name || "No role"}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex flex-wrap gap-1">
+                      {user.userPermissions && user.userPermissions.length > 0 ? (
+                        user.userPermissions.map((userPermission) => (
+                          <span
+                            key={userPermission.id}
+                            className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                          >
+                            {userPermission.permission.name}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-sm text-gray-500">
+                          No direct permissions
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button
+                      onClick={() => openPermissionModal(user)}
+                      className="text-indigo-600 hover:text-indigo-900 font-medium"
+                    >
+                      Manage Permissions
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4} className="px-6 py-4 text-center text-gray-500">
+                  No users found
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
