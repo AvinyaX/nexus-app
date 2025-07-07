@@ -122,9 +122,8 @@ export default function UsersPage() {
         .map((up) => up.permissionId);
 
       if (permissionsToRemove.length > 0) {
-        await fetch("/api/acl/remove-user-permission", {
+        await apiRequest("/api/acl/remove-user-permission", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userId: selectedUser.id,
             permissionIds: permissionsToRemove,
@@ -141,9 +140,8 @@ export default function UsersPage() {
       );
 
       if (permissionsToAdd.length > 0) {
-        await fetch("/api/acl/assign-user-permission", {
+        await apiRequest("/api/acl/assign-user-permission", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userId: selectedUser.id,
             permissionIds: permissionsToAdd,
