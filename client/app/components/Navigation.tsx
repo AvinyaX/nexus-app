@@ -1,8 +1,7 @@
-import React from 'react';
 import { Link } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
 
-export const Navigation: React.FC = () => {
+export const Navigation = () => {
   const { user, logout, isAuthenticated } = useAuth();
 
   return (
