@@ -48,7 +48,8 @@ export default function Companies() {
   const fetchCompanies = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/companies");
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${apiUrl}/api/companies`);
       if (!response.ok) {
         if (response.status === 401) {
           setError("Authentication required. This feature requires user authentication.");
