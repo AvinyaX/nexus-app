@@ -4,7 +4,7 @@ import { Transform, Type } from 'class-transformer';
 export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsOptional()
   @IsString()
@@ -12,7 +12,7 @@ export class CreateProductDto {
 
   @IsString()
   @IsNotEmpty()
-  sku: string;
+  sku!: string;
 
   @IsOptional()
   @IsString()
@@ -20,11 +20,11 @@ export class CreateProductDto {
 
   @Transform(({ value }) => parseFloat(value))
   @IsNumber({ maxDecimalPlaces: 2 })
-  price: number;
+  price!: number;
 
   @Transform(({ value }) => parseFloat(value))
   @IsNumber({ maxDecimalPlaces: 2 })
-  costPrice: number;
+  costPrice!: number;
 
   @IsOptional()
   @IsString()
