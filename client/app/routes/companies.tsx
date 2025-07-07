@@ -69,11 +69,8 @@ export default function Companies() {
   const createCompany = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/companies", {
+      const response = await apiRequest("/api/companies", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(newCompany),
       });
 
