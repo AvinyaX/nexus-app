@@ -52,7 +52,7 @@ export class CompaniesController {
         throw new HttpException('Company not found', HttpStatus.NOT_FOUND);
       }
       return company;
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         error.message || 'Failed to fetch company',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -64,7 +64,7 @@ export class CompaniesController {
   async update(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
     try {
       return await this.companiesService.update(id, updateCompanyDto);
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         error.message || 'Failed to update company',
         HttpStatus.BAD_REQUEST,
@@ -76,7 +76,7 @@ export class CompaniesController {
   async remove(@Param('id') id: string) {
     try {
       return await this.companiesService.remove(id);
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         error.message || 'Failed to delete company',
         HttpStatus.BAD_REQUEST,
