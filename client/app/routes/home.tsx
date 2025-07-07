@@ -1,6 +1,8 @@
 import type { Route } from "./+types/home";
 import { Welcome } from "../welcome/welcome";
 import { Link } from "react-router";
+import { Navigation } from "../components/Navigation";
+import { useAuth } from "../contexts/AuthContext";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,10 +12,52 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
+  const { isAuthenticated, user } = useAuth();
+
   return (
     <div>
+      <Navigation />
       <Welcome />
+      
       <div className="container mx-auto px-4 py-8">
+        {/* Authentication Status */}
+        {isAuthenticated ? (
+          <div className="mb-8 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-green-800">Authenticated</h3>
+                <div className="mt-1 text-sm text-green-700">
+                  Welcome back, <strong>{user?.name || user?.username}</strong>! 
+                  You are logged in as <strong>{user?.role?.name || 'User'}</strong>.
+                  You can now access all protected features below.
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="mb-8 bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-lg">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-yellow-800">Not Authenticated</h3>
+                <div className="mt-1 text-sm text-yellow-700">
+                  <Link to="/login" className="font-medium underline">Please login</Link> to access 
+                  protected features like IAM Management, Companies, and Products.
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Hardware Store Management</h2>
           <p className="text-lg text-gray-600">
@@ -28,26 +72,48 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Link
               to="/companies"
-              className="block p-6 bg-blue-50 rounded-lg border border-blue-200 shadow-md hover:bg-blue-100 transition-colors"
+              className={`block p-6 rounded-lg border shadow-md transition-colors ${
+                isAuthenticated 
+                  ? 'bg-blue-50 border-blue-200 hover:bg-blue-100' 
+                  : 'bg-gray-50 border-gray-200 opacity-75'
+              }`}
             >
-              <h5 className="mb-2 text-xl font-bold tracking-tight text-blue-900">
-                🏢 Companies
+              <h5 className={`mb-2 text-xl font-bold tracking-tight ${
+                isAuthenticated ? 'text-blue-900' : 'text-gray-600'
+              }`}>
+                🏢 Companies {!isAuthenticated && '🔒'}
               </h5>
-              <p className="font-normal text-blue-700">
+              <p className={`font-normal ${
+                isAuthenticated ? 'text-blue-700' : 'text-gray-500'
+              }`}>
                 Manage multiple companies, settings, and multi-tenant configurations.
               </p>
+              {!isAuthenticated && (
+                <p className="text-xs text-red-600 mt-2">Requires authentication</p>
+              )}
             </Link>
 
             <Link
               to="/products"
-              className="block p-6 bg-green-50 rounded-lg border border-green-200 shadow-md hover:bg-green-100 transition-colors"
+              className={`block p-6 rounded-lg border shadow-md transition-colors ${
+                isAuthenticated 
+                  ? 'bg-green-50 border-green-200 hover:bg-green-100' 
+                  : 'bg-gray-50 border-gray-200 opacity-75'
+              }`}
             >
-              <h5 className="mb-2 text-xl font-bold tracking-tight text-green-900">
-                📦 Products
+              <h5 className={`mb-2 text-xl font-bold tracking-tight ${
+                isAuthenticated ? 'text-green-900' : 'text-gray-600'
+              }`}>
+                📦 Products {!isAuthenticated && '🔒'}
               </h5>
-              <p className="font-normal text-green-700">
+              <p className={`font-normal ${
+                isAuthenticated ? 'text-green-700' : 'text-gray-500'
+              }`}>
                 Manage product catalog, pricing, categories, and specifications.
               </p>
+              {!isAuthenticated && (
+                <p className="text-xs text-red-600 mt-2">Requires authentication</p>
+              )}
             </Link>
 
             <Link
@@ -76,14 +142,25 @@ export default function Home() {
 
             <Link
               to="/users"
-              className="block p-6 bg-gray-50 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 transition-colors"
+              className={`block p-6 rounded-lg border shadow-md transition-colors ${
+                isAuthenticated 
+                  ? 'bg-gray-50 border-gray-200 hover:bg-gray-100' 
+                  : 'bg-gray-50 border-gray-200 opacity-75'
+              }`}
             >
-              <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900">
-                🔐 IAM Management
+              <h5 className={`mb-2 text-xl font-bold tracking-tight ${
+                isAuthenticated ? 'text-gray-900' : 'text-gray-600'
+              }`}>
+                🔐 IAM Management {!isAuthenticated && '🔒'}
               </h5>
-              <p className="font-normal text-gray-700">
+              <p className={`font-normal ${
+                isAuthenticated ? 'text-gray-700' : 'text-gray-500'
+              }`}>
                 Users, roles, and permissions management system (Users, Roles, Permissions tabs).
               </p>
+              {!isAuthenticated && (
+                <p className="text-xs text-red-600 mt-2">Requires authentication</p>
+              )}
             </Link>
 
             <Link
