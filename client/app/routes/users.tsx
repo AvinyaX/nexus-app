@@ -67,10 +67,16 @@ export default function UsersPage() {
   const fetchPermissions = async () => {
     try {
       const response = await fetch("/api/permissions");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
-      setPermissions(data);
+      // Ensure data is an array
+      setPermissions(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching permissions:", error);
+      // Set empty array on error
+      setPermissions([]);
     }
   };
 
