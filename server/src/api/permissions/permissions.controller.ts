@@ -98,22 +98,24 @@ export class AclPermissionsController {
   @Post("assign-user-permission")
   @HttpCode(HttpStatus.NO_CONTENT)
   async assignUserPermission(
-    @Body() data: { userId: string; permissionId: string },
+    @Body() data: { userId: string; permissionId?: string; permissionIds?: string[] },
   ): Promise<void> {
+    const permissionIds = data.permissionIds || (data.permissionId ? [data.permissionId] : []);
     await this.permissionsService.assignPermissions({
       userId: data.userId,
-      permissionIds: [data.permissionId],
+      permissionIds,
     });
   }
 
   @Post("remove-user-permission")
   @HttpCode(HttpStatus.NO_CONTENT)
   async removeUserPermission(
-    @Body() data: { userId: string; permissionId: string },
+    @Body() data: { userId: string; permissionId?: string; permissionIds?: string[] },
   ): Promise<void> {
+    const permissionIds = data.permissionIds || (data.permissionId ? [data.permissionId] : []);
     await this.permissionsService.removePermissions({
       userId: data.userId,
-      permissionIds: [data.permissionId],
+      permissionIds,
     });
   }
 }
