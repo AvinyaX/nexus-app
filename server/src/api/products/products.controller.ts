@@ -31,7 +31,7 @@ export class ProductsController {
     try {
       const companyId = await this.companyContextService.getCompanyId();
       return await this.productsService.create(companyId, createProductDto);
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         error.message || 'Failed to create product',
         HttpStatus.BAD_REQUEST,
