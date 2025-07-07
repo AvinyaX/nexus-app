@@ -28,6 +28,9 @@ model User {
   // Direct permissions relationship
   userPermissions UserPermission[]
 
+  // Multi-company relationships
+  userCompanies UserCompany[]
+
   @@map("users")
 }
 
