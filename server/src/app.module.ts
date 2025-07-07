@@ -10,6 +10,7 @@ import { PermissionsModule } from "./api/permissions/permissions.module";
 import { RolesModule } from "./api/roles/roles.module";
 import { CompaniesModule } from "./api/companies/companies.module";
 import { ProductsModule } from "./api/products/products.module";
+import { TestModule } from "./api/test/test.module";
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ProductsModule } from "./api/products/products.module";
     RolesModule,
     CompaniesModule,
     ProductsModule,
+    TestModule,
   ],
   controllers: [AppController],
   providers: [AppService],
