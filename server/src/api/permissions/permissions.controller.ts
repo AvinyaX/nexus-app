@@ -74,7 +74,7 @@ export class PermissionsController {
 }
 
 // Additional controller for IAM demo compatibility
-@Controller("acl")
+@Controller("api/acl")
 export class AclPermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
