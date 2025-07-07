@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import type { Route } from "./+types/users";
+import { apiRequest } from "../utils/api";
 
 export function meta({}: Route.MetaArgs) {
   return [
