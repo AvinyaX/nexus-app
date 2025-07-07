@@ -70,7 +70,7 @@ export class CompanyContextService {
     }
 
     // Check if user has access to this company
-    const userId = this.request.user?.id;
+    const userId = this.request.user?.id || this.request.user?.userId;
     if (userId) {
       const userCompany = await this.prisma.userCompany.findUnique({
         where: {
