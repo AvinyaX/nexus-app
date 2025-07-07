@@ -5,7 +5,7 @@ export interface ServerConfig {
 
 export type AppConfig = {
   cors: { 
-    origin: (origin: string | undefined, callback: (err: Error | null, success?: boolean) => void) => void;
+    origin: boolean;
     methods: string; 
     credentials: boolean;
     allowedHeaders: string[];
