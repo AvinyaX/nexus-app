@@ -34,7 +34,7 @@ export class CompanyContextService {
     }
 
     // If no company ID provided, try to get user's default company
-    const userId = this.request.user?.id;
+    const userId = this.request.user?.id || this.request.user?.userId;
     if (userId) {
       const userCompany = await this.prisma.userCompany.findFirst({
         where: {
