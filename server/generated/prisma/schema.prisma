@@ -28,6 +28,9 @@ model User {
   // Direct permissions relationship
   userPermissions UserPermission[]
 
+  // Multi-company relationships
+  userCompanies UserCompany[]
+
   @@map("users")
 }
 
@@ -102,4 +105,456 @@ model UserPermission {
 
   @@unique([userId, permissionId])
   @@map("user_permissions")
+}
+
+// =============================================================================
+// MULTI-COMPANY ARCHITECTURE MODELS
+// =============================================================================
+
+model Company {
+  id               String   @id @default(cuid())
+  name             String
+  code             String   @unique // Short code for the company
+  settings         Json?    @default("{}") // JSONB for company-specific settings
+  subscriptionPlan String   @default("basic")
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Multi-company relationships
+  userCompanies UserCompany[]
+
+  // Hardware store entities
+  customers      Customer[]
+  agents         Agent[]
+  products       Product[]
+  categories     Category[]
+  inventoryItems InventoryItem[]
+  quotations     Quotation[]
+  invoices       Invoice[]
+  payments       Payment[]
+  commissions    Commission[]
+  orders         Order[]
+  deliveries     Delivery[]
+  returns        Return[]
+  communications Communication[]
+
+  @@map("companies")
+}
+
+model UserCompany {
+  id        String   @id @default(cuid())
+  userId    String
+  companyId String
+  role      String   @default("user") // Company-specific role
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, companyId])
+  @@index([companyId])
+  @@map("user_companies")
+}
+
+// =============================================================================
+// HARDWARE STORE MANAGEMENT MODELS
+// =============================================================================
+
+model Customer {
+  id          String    @id @default(cuid())
+  companyId   String
+  name        String
+  email       String?
+  phone       String?
+  address     String?
+  dateOfBirth DateTime?
+  anniversary DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relationships
+  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  agentCustomers AgentCustomer[]
+  quotations     Quotation[]
+  invoices       Invoice[]
+  communications Communication[]
+
+  @@unique([companyId, email])
+  @@index([companyId])
+  @@map("customers")
+}
+
+model Agent {
+  id             String   @id @default(cuid())
+  companyId      String
+  name           String
+  email          String?
+  phone          String?
+  address        String?
+  commissionType String   @default("percentage") // "percentage" or "fixed"
+  commissionRate Decimal  @default(0.00)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relationships
+  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  agentCustomers AgentCustomer[]
+  commissions    Commission[]
+  communications Communication[]
+
+  @@unique([companyId, email])
+  @@index([companyId])
+  @@map("agents")
+}
+
+model AgentCustomer {
+  id         String   @id @default(cuid())
+  agentId    String
+  customerId String
+  createdAt  DateTime @default(now())
+
+  agent    Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@unique([agentId, customerId])
+  @@index([agentId])
+  @@index([customerId])
+  @@map("agent_customers")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  companyId   String
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  company  Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  products Product[]
+
+  @@unique([companyId, name])
+  @@index([companyId])
+  @@map("categories")
+}
+
+model Product {
+  id             String   @id @default(cuid())
+  companyId      String
+  categoryId     String?
+  name           String
+  description    String?
+  sku            String // Stock Keeping Unit
+  hsnCode        String? // HSN/SAC code for GST
+  price          Decimal  @default(0.00)
+  costPrice      Decimal  @default(0.00)
+  unit           String   @default("piece") // piece, meter, kg, etc.
+  isActive       Boolean  @default(true)
+  isBuildToOrder Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relationships
+  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  category       Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  inventoryItems InventoryItem[]
+  quotationItems QuotationItem[]
+  invoiceItems   InvoiceItem[]
+  orderItems     OrderItem[]
+  returnItems    ReturnItem[]
+
+  @@unique([companyId, sku])
+  @@index([companyId])
+  @@index([categoryId])
+  @@map("products")
+}
+
+model InventoryItem {
+  id           String   @id @default(cuid())
+  companyId    String
+  productId    String
+  location     String   @default("main") // warehouse/location identifier
+  quantity     Decimal  @default(0.00)
+  reservedQty  Decimal  @default(0.00)
+  reorderLevel Decimal  @default(0.00)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relationships
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, productId, location])
+  @@index([companyId])
+  @@index([productId])
+  @@map("inventory_items")
+}
+
+model Quotation {
+  id              String    @id @default(cuid())
+  companyId       String
+  customerId      String
+  quotationNumber String
+  status          String    @default("draft") // draft, sent, approved, expired, converted
+  validUntil      DateTime?
+  subtotal        Decimal   @default(0.00)
+  taxAmount       Decimal   @default(0.00)
+  totalAmount     Decimal   @default(0.00)
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relationships
+  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  customer       Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  quotationItems QuotationItem[]
+  invoices       Invoice[]
+
+  @@unique([companyId, quotationNumber])
+  @@index([companyId])
+  @@index([customerId])
+  @@map("quotations")
+}
+
+model QuotationItem {
+  id          String   @id @default(cuid())
+  quotationId String
+  productId   String
+  quantity    Decimal  @default(0.00)
+  unitPrice   Decimal  @default(0.00)
+  totalPrice  Decimal  @default(0.00)
+  createdAt   DateTime @default(now())
+
+  // Relationships
+  quotation Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([quotationId])
+  @@index([productId])
+  @@map("quotation_items")
+}
+
+model Invoice {
+  id            String    @id @default(cuid())
+  companyId     String
+  customerId    String
+  quotationId   String?
+  invoiceNumber String
+  status        String    @default("draft") // draft, sent, paid, overdue, cancelled
+  dueDate       DateTime?
+  subtotal      Decimal   @default(0.00)
+  taxAmount     Decimal   @default(0.00)
+  deliveryFee   Decimal   @default(0.00)
+  totalAmount   Decimal   @default(0.00)
+  paidAmount    Decimal   @default(0.00)
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relationships
+  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  customer     Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  quotation    Quotation?    @relation(fields: [quotationId], references: [id], onDelete: SetNull)
+  invoiceItems InvoiceItem[]
+  payments     Payment[]
+  commissions  Commission[]
+  orders       Order[]
+  returns      Return[]
+
+  @@unique([companyId, invoiceNumber])
+  @@index([companyId])
+  @@index([customerId])
+  @@index([quotationId])
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id         String   @id @default(cuid())
+  invoiceId  String
+  productId  String
+  quantity   Decimal  @default(0.00)
+  unitPrice  Decimal  @default(0.00)
+  totalPrice Decimal  @default(0.00)
+  createdAt  DateTime @default(now())
+
+  // Relationships
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+  @@index([productId])
+  @@map("invoice_items")
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  companyId     String
+  invoiceId     String
+  paymentMethod String   @default("cash") // cash, card, upi, bank_transfer, credit
+  amount        Decimal  @default(0.00)
+  reference     String? // Transaction reference
+  notes         String?
+  createdAt     DateTime @default(now())
+
+  // Relationships
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([invoiceId])
+  @@map("payments")
+}
+
+model Commission {
+  id             String   @id @default(cuid())
+  companyId      String
+  agentId        String
+  invoiceId      String
+  commissionType String   @default("percentage") // percentage, fixed
+  commissionRate Decimal  @default(0.00)
+  amount         Decimal  @default(0.00)
+  status         String   @default("pending") // pending, paid, cancelled
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relationships
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  agent   Agent   @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([agentId])
+  @@index([invoiceId])
+  @@map("commissions")
+}
+
+model Order {
+  id         String   @id @default(cuid())
+  companyId  String
+  invoiceId  String
+  status     String   @default("pending") // pending, processing, ready, dispatched, delivered, cancelled
+  assignedTo String? // Staff member assigned
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relationships
+  company    Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  invoice    Invoice     @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+  deliveries Delivery[]
+
+  @@index([companyId])
+  @@index([invoiceId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id           String   @id @default(cuid())
+  orderId      String
+  productId    String
+  quantity     Decimal  @default(0.00)
+  fulfilledQty Decimal  @default(0.00)
+  createdAt    DateTime @default(now())
+
+  // Relationships
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model Delivery {
+  id             String    @id @default(cuid())
+  companyId      String
+  orderId        String
+  deliveryPerson String?
+  address        String?
+  status         String    @default("pending") // pending, in_transit, delivered, failed
+  scheduledAt    DateTime?
+  deliveredAt    DateTime?
+  notes          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relationships
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([orderId])
+  @@map("deliveries")
+}
+
+model Return {
+  id           String   @id @default(cuid())
+  companyId    String
+  invoiceId    String
+  returnNumber String
+  reason       String?
+  status       String   @default("pending") // pending, approved, processed, cancelled
+  subtotal     Decimal  @default(0.00)
+  taxAmount    Decimal  @default(0.00)
+  totalAmount  Decimal  @default(0.00)
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relationships
+  company     Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  invoice     Invoice      @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  returnItems ReturnItem[]
+
+  @@unique([companyId, returnNumber])
+  @@index([companyId])
+  @@index([invoiceId])
+  @@map("returns")
+}
+
+model ReturnItem {
+  id         String   @id @default(cuid())
+  returnId   String
+  productId  String
+  quantity   Decimal  @default(0.00)
+  unitPrice  Decimal  @default(0.00)
+  totalPrice Decimal  @default(0.00)
+  createdAt  DateTime @default(now())
+
+  // Relationships
+  return  Return  @relation(fields: [returnId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([returnId])
+  @@index([productId])
+  @@map("return_items")
+}
+
+model Communication {
+  id         String    @id @default(cuid())
+  companyId  String
+  customerId String?
+  agentId    String?
+  type       String    @default("email") // email, sms, whatsapp, call
+  subject    String?
+  message    String?
+  status     String    @default("pending") // pending, sent, delivered, failed
+  sentAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  // Relationships
+  company  Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  agent    Agent?    @relation(fields: [agentId], references: [id], onDelete: SetNull)
+
+  @@index([companyId])
+  @@index([customerId])
+  @@index([agentId])
+  @@map("communications")
 }

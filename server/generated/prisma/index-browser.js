@@ -168,9 +168,256 @@ exports.Prisma.UserPermissionScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.CompanyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  settings: 'settings',
+  subscriptionPlan: 'subscriptionPlan',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserCompanyScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  companyId: 'companyId',
+  role: 'role',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CustomerScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  address: 'address',
+  dateOfBirth: 'dateOfBirth',
+  anniversary: 'anniversary',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AgentScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  address: 'address',
+  commissionType: 'commissionType',
+  commissionRate: 'commissionRate',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AgentCustomerScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  customerId: 'customerId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CategoryScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  name: 'name',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProductScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  categoryId: 'categoryId',
+  name: 'name',
+  description: 'description',
+  sku: 'sku',
+  hsnCode: 'hsnCode',
+  price: 'price',
+  costPrice: 'costPrice',
+  unit: 'unit',
+  isActive: 'isActive',
+  isBuildToOrder: 'isBuildToOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InventoryItemScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  productId: 'productId',
+  location: 'location',
+  quantity: 'quantity',
+  reservedQty: 'reservedQty',
+  reorderLevel: 'reorderLevel',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.QuotationScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  customerId: 'customerId',
+  quotationNumber: 'quotationNumber',
+  status: 'status',
+  validUntil: 'validUntil',
+  subtotal: 'subtotal',
+  taxAmount: 'taxAmount',
+  totalAmount: 'totalAmount',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.QuotationItemScalarFieldEnum = {
+  id: 'id',
+  quotationId: 'quotationId',
+  productId: 'productId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  totalPrice: 'totalPrice',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.InvoiceScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  customerId: 'customerId',
+  quotationId: 'quotationId',
+  invoiceNumber: 'invoiceNumber',
+  status: 'status',
+  dueDate: 'dueDate',
+  subtotal: 'subtotal',
+  taxAmount: 'taxAmount',
+  deliveryFee: 'deliveryFee',
+  totalAmount: 'totalAmount',
+  paidAmount: 'paidAmount',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InvoiceItemScalarFieldEnum = {
+  id: 'id',
+  invoiceId: 'invoiceId',
+  productId: 'productId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  totalPrice: 'totalPrice',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PaymentScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  invoiceId: 'invoiceId',
+  paymentMethod: 'paymentMethod',
+  amount: 'amount',
+  reference: 'reference',
+  notes: 'notes',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CommissionScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  agentId: 'agentId',
+  invoiceId: 'invoiceId',
+  commissionType: 'commissionType',
+  commissionRate: 'commissionRate',
+  amount: 'amount',
+  status: 'status',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OrderScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  invoiceId: 'invoiceId',
+  status: 'status',
+  assignedTo: 'assignedTo',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OrderItemScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  productId: 'productId',
+  quantity: 'quantity',
+  fulfilledQty: 'fulfilledQty',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.DeliveryScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  orderId: 'orderId',
+  deliveryPerson: 'deliveryPerson',
+  address: 'address',
+  status: 'status',
+  scheduledAt: 'scheduledAt',
+  deliveredAt: 'deliveredAt',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ReturnScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  invoiceId: 'invoiceId',
+  returnNumber: 'returnNumber',
+  reason: 'reason',
+  status: 'status',
+  subtotal: 'subtotal',
+  taxAmount: 'taxAmount',
+  totalAmount: 'totalAmount',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ReturnItemScalarFieldEnum = {
+  id: 'id',
+  returnId: 'returnId',
+  productId: 'productId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  totalPrice: 'totalPrice',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CommunicationScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  customerId: 'customerId',
+  agentId: 'agentId',
+  type: 'type',
+  subject: 'subject',
+  message: 'message',
+  status: 'status',
+  sentAt: 'sentAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -183,6 +430,12 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
 
 exports.Prisma.ModelName = {
   User: 'User',
@@ -190,7 +443,27 @@ exports.Prisma.ModelName = {
   Permission: 'Permission',
   UserRole: 'UserRole',
   RolePermission: 'RolePermission',
-  UserPermission: 'UserPermission'
+  UserPermission: 'UserPermission',
+  Company: 'Company',
+  UserCompany: 'UserCompany',
+  Customer: 'Customer',
+  Agent: 'Agent',
+  AgentCustomer: 'AgentCustomer',
+  Category: 'Category',
+  Product: 'Product',
+  InventoryItem: 'InventoryItem',
+  Quotation: 'Quotation',
+  QuotationItem: 'QuotationItem',
+  Invoice: 'Invoice',
+  InvoiceItem: 'InvoiceItem',
+  Payment: 'Payment',
+  Commission: 'Commission',
+  Order: 'Order',
+  OrderItem: 'OrderItem',
+  Delivery: 'Delivery',
+  Return: 'Return',
+  ReturnItem: 'ReturnItem',
+  Communication: 'Communication'
 };
 
 /**
