@@ -14,17 +14,27 @@ export type AppConfig = {
 
 export const appConfig: AppConfig = {
   cors: {
-    origin: process.env.CORS_ORIGIN
-      ? process.env.CORS_ORIGIN.split(",")
-      : [
-          "http://localhost:3000", 
-          "http://localhost:5173",
-          "https://localhost:3000",
-          /\.preview\.emergentagent\.com$/,
-          /\.preview\.emergent\.com$/
-        ],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    origin: (origin, callback) => {
+      // Allow all preview domains and localhost
+      const allowedOrigins = [
+        'http://localhost:3000',
+        'http://localhost:5173', 
+        'https://localhost:3000'
+      ];
+      
+      // Allow all preview.emergentagent.com subdomains
+      if (!origin || 
+          allowedOrigins.includes(origin) || 
+          origin.includes('.preview.emergentagent.com') ||
+          origin.includes('.preview.emergent.com')) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'), false);
+      }
+    },
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-company-id'],
   },
   rateLimit: {
     max: process.env.RATE_LIMIT_MAX ? Number(process.env.RATE_LIMIT_MAX) : 100,
