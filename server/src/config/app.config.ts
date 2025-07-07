@@ -4,7 +4,12 @@ export interface ServerConfig {
 }
 
 export type AppConfig = {
-  cors: { origin: (string | RegExp)[]; methods: string; credentials: boolean };
+  cors: { 
+    origin: (origin: string | undefined, callback: (err: Error | null, success?: boolean) => void) => void;
+    methods: string; 
+    credentials: boolean;
+    allowedHeaders: string[];
+  };
   rateLimit: { max: number; timeWindow: string };
   jwt: { secret: string };
   database: { url: string };
