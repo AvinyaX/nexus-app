@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
+import type { Route } from "./+types/users";
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "IAM Management - Hardware Store" },
+    { name: "description", content: "Identity and Access Management System" },
+  ];
+}
 
 interface Permission {
   id: string;
