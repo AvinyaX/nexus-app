@@ -36,7 +36,7 @@ export class CompaniesController {
   async findAll() {
     try {
       return await this.companiesService.findAll();
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         error.message || 'Failed to fetch companies',
         HttpStatus.INTERNAL_SERVER_ERROR,
