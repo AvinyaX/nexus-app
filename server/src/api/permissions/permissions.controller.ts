@@ -19,7 +19,7 @@ import {
   RemovePermissionDto,
 } from "./permissions.types";
 
-@Controller("acl/permissions")
+@Controller("api/acl/permissions")
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
