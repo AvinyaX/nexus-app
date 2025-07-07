@@ -79,10 +79,10 @@ export default function Home() {
               className="block p-6 bg-gray-50 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 transition-colors"
             >
               <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900">
-                🔐 Users & Permissions
+                🔐 IAM Management
               </h5>
               <p className="font-normal text-gray-700">
-                Manage users, roles, and direct permissions assignment.
+                Users, roles, and permissions management system (Users, Roles, Permissions tabs).
               </p>
             </Link>
 
