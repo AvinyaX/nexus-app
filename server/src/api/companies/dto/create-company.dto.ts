@@ -3,11 +3,11 @@ import { IsString, IsNotEmpty, IsOptional, IsBoolean, IsJSON } from 'class-valid
 export class CreateCompanyDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsString()
   @IsNotEmpty()
-  code: string;
+  code!: string;
 
   @IsOptional()
   @IsJSON()
