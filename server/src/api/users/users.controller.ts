@@ -12,7 +12,7 @@ import {
 import { UsersService } from "./users.service";
 import { User, CreateUserDto, UpdateUserDto } from "./users.types";
 
-@Controller("users")
+@Controller("api/users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
