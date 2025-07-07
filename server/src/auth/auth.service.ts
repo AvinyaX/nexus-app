@@ -1,5 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService, JwtSignOptions as NestJwtSignOptions } from "@nestjs/jwt";
+import { PrismaService } from "../prisma/prisma.service";
 import {
   JwtSignOptions,
   JwtVerifyOptions,
@@ -13,15 +14,60 @@ export interface UserLoginDto {
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private prisma: PrismaService,
+  ) {}
 
-  login(user: UserLoginDto) {
-    const payload: { username: string; sub: string } = {
+  async login(email: string, password: string) {
+    // Find user by email
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      include: {
+        userRoles: {
+          include: {
+            role: true,
+          },
+        },
+        userPermissions: {
+          include: {
+            permission: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    // In a real app, you would hash and compare passwords
+    // For demo purposes, we'll accept "password" for all users
+    if (password !== 'password') {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    // Get the user's primary role
+    const primaryRole = user.userRoles[0]?.role;
+
+    const payload = {
       username: user.username,
-      sub: user.userId,
+      sub: user.id,
+      email: user.email,
+      role: primaryRole?.name,
     };
+
+    const userData = {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      name: user.name,
+      role: primaryRole,
+    };
+
     return {
       access_token: this.jwtService.sign(payload),
+      user: userData,
     };
   }
 
