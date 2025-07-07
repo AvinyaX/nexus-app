@@ -49,10 +49,10 @@ export default function Companies() {
   const fetchCompanies = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/companies");
+      const response = await apiRequest("/api/companies");
       if (!response.ok) {
         if (response.status === 401) {
-          setError("Authentication required. This feature requires user authentication.");
+          setError("Authentication required. Please login to access companies.");
           return;
         }
         throw new Error(`HTTP error! status: ${response.status}`);
