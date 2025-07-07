@@ -45,7 +45,8 @@ export default function Products() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/products", {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${apiUrl}/api/products`, {
         headers: {
           'x-company-id': 'demo-company-id' // This would come from company context in real app
         }
