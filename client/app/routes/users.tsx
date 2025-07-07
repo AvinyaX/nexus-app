@@ -78,7 +78,7 @@ export default function UsersPage() {
 
   const fetchPermissions = async () => {
     try {
-      const response = await fetch("/api/acl/permissions");
+      const response = await apiRequest("/api/acl/permissions");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
