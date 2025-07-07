@@ -16,7 +16,13 @@ export const appConfig: AppConfig = {
   cors: {
     origin: process.env.CORS_ORIGIN
       ? process.env.CORS_ORIGIN.split(",")
-      : ["http://localhost:3000", "http://localhost:5173"],
+      : [
+          "http://localhost:3000", 
+          "http://localhost:5173",
+          "https://localhost:3000",
+          /\.preview\.emergentagent\.com$/,
+          /\.preview\.emergent\.com$/
+        ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   },
