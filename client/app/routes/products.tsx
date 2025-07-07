@@ -46,7 +46,7 @@ export default function Products() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/products", {
+      const response = await apiRequest("/api/products", {
         headers: {
           'x-company-id': 'demo-company-id' // This would come from company context in real app
         }
