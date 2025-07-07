@@ -53,7 +53,7 @@ export class ProductsController {
         search,
       };
       return await this.productsService.findAll(companyId, filters);
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         error.message || 'Failed to fetch products',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -70,7 +70,7 @@ export class ProductsController {
         throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
       }
       return product;
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         error.message || 'Failed to fetch product',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -83,7 +83,7 @@ export class ProductsController {
     try {
       const companyId = await this.companyContextService.getCompanyId();
       return await this.productsService.update(companyId, id, updateProductDto);
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         error.message || 'Failed to update product',
         HttpStatus.BAD_REQUEST,
@@ -96,7 +96,7 @@ export class ProductsController {
     try {
       const companyId = await this.companyContextService.getCompanyId();
       return await this.productsService.remove(companyId, id);
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         error.message || 'Failed to delete product',
         HttpStatus.BAD_REQUEST,
