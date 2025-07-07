@@ -49,10 +49,16 @@ export default function UsersPage() {
   const fetchUsers = async () => {
     try {
       const response = await fetch("/api/users");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
-      setUsers(data);
+      // Ensure data is an array
+      setUsers(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching users:", error);
+      // Set empty array on error
+      setUsers([]);
     } finally {
       setLoading(false);
     }
