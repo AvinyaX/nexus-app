@@ -53,7 +53,7 @@ export default function RolesPage() {
   const fetchRoles = async () => {
     try {
       setError(null);
-      const response = await fetch("/api/roles");
+      const response = await apiRequest("/api/roles");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -61,7 +61,7 @@ export default function RolesPage() {
       setRoles(Array.isArray(data) ? data : []);
     } catch (error: any) {
       console.error("Error fetching roles:", error);
-      setError("Failed to load roles. This might be because authentication is required.");
+      setError("Failed to load roles. Please check your authentication.");
       setRoles([]);
     } finally {
       setLoading(false);
@@ -70,7 +70,7 @@ export default function RolesPage() {
 
   const fetchPermissions = async () => {
     try {
-      const response = await fetch("/api/acl/permissions");
+      const response = await apiRequest("/api/acl/permissions");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
