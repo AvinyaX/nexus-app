@@ -24,7 +24,7 @@ export class CompaniesController {
   async create(@Body() createCompanyDto: CreateCompanyDto) {
     try {
       return await this.companiesService.create(createCompanyDto);
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         error.message || 'Failed to create company',
         HttpStatus.BAD_REQUEST,
