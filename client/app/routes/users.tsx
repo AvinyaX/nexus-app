@@ -49,6 +49,7 @@ export default function UsersPage() {
 
   const fetchUsers = async () => {
     try {
+      setError(null);
       const response = await fetch("/api/users");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -56,8 +57,9 @@ export default function UsersPage() {
       const data = await response.json();
       // Ensure data is an array
       setUsers(Array.isArray(data) ? data : []);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching users:", error);
+      setError("Failed to load users. This might be because authentication is required.");
       // Set empty array on error
       setUsers([]);
     } finally {
