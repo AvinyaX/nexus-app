@@ -20,7 +20,7 @@ import {
   RemoveRolePermissionsDto,
 } from "./roles.types";
 
-@Controller("acl/roles")
+@Controller("api/roles")
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
