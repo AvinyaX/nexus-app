@@ -34,7 +34,7 @@ export default function PermissionsPage() {
   const fetchPermissions = async () => {
     try {
       setError(null);
-      const response = await fetch("/api/acl/permissions");
+      const response = await apiRequest("/api/acl/permissions");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -42,7 +42,7 @@ export default function PermissionsPage() {
       setPermissions(Array.isArray(data) ? data : []);
     } catch (error: any) {
       console.error("Error fetching permissions:", error);
-      setError("Failed to load permissions. This might be because authentication is required.");
+      setError("Failed to load permissions. Please check your authentication.");
       setPermissions([]);
     } finally {
       setLoading(false);
