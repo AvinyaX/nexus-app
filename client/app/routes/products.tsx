@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import type { Route } from "./+types/products";
+import { apiRequest } from "../utils/api";
 
 export function meta({}: Route.MetaArgs) {
   return [
