@@ -206,8 +206,9 @@ export default function UsersPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Navigation Tabs */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Users Management</h1>
+        <h1 className="text-3xl font-bold text-gray-900">IAM Management</h1>
         <Link
           to="/"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -215,6 +216,34 @@ export default function UsersPage() {
           Back to Home
         </Link>
       </div>
+
+      {/* Tab Navigation */}
+      <div className="mb-8">
+        <nav className="flex space-x-1 bg-gray-100 rounded-lg p-1">
+          <Link
+            to="/users"
+            className="flex-1 py-2 px-4 text-center font-medium rounded-md bg-white text-blue-600 shadow-sm border border-gray-200"
+          >
+            Users
+          </Link>
+          <Link
+            to="/roles"
+            className="flex-1 py-2 px-4 text-center font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+          >
+            Roles
+          </Link>
+          <Link
+            to="/permissions"
+            className="flex-1 py-2 px-4 text-center font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+          >
+            Permissions
+          </Link>
+        </nav>
+      </div>
+
+      {/* Users Management Content */}
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Users Management</h2>
 
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
